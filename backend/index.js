@@ -2,9 +2,12 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import AuthRoute from "./routes/AuthRoute.js";
-import UserRoute from"./routes/UserRoute.js";
 import PelangganRoute from"./routes/PelangganRoute.js";
-
+import PembayaranRoute from "./routes/PembayaranRoutes.js";
+import PenggunaanRoute from "./routes/PenggunaanRoutes.js";
+import TagihanRoute from "./routes/TagihanRoutes.js";
+import TarifRoute from"./routes/TarifRoute.js";
+import UserRoute from"./routes/UserRoute.js";
 dotenv.config();
 
 
@@ -19,8 +22,12 @@ app.use(cors({
 }));
 
 app.use(AuthRoute);
-app.use(UserRoute);
 app.use(PelangganRoute);
+app.use(PembayaranRoute);
+app.use(PenggunaanRoute);
+app.use(TagihanRoute);
+app.use(TarifRoute);
+app.use(UserRoute);
 
 app.listen(process.env.APP_PORT, () => {
   console.log("Server up and running...");
