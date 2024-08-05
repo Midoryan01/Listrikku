@@ -1,4 +1,3 @@
-// src/features/authSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
@@ -44,7 +43,7 @@ export const fetchCurrentUser = createAsyncThunk(
 );
 
 // Async thunk for logout
-export const logout = createAsyncThunk('auth/logout', async (_, { rejectWithValue }) => {
+export const logOut = createAsyncThunk('auth/logout', async (_, { rejectWithValue }) => {
   try {
     const response = await axios.post(`${API_URL}/logout`);
     return response.data;
@@ -109,7 +108,7 @@ const authSlice = createSlice({
         state.error = action.payload;
       })
       // Handle logout
-      .addCase(logout.fulfilled, (state) => {
+      .addCase(logOut.fulfilled, (state) => {
         state.user = null;
         state.token = null;
         state.role = null;
