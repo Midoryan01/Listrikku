@@ -22,13 +22,16 @@ export const Login = async (req, res) => {
 
     // If still not found, return error
     if (!userOrCustomer) {
-      return res.status(404).json({ msg: "User tidak ditemukan" });
+      return res.status(404).json({ msg: "Username atau Password Salah" });
     }
 
     // Verify password using argon2
-    const isPasswordMatch = await argon2.verify(userOrCustomer.password, password);
+    const isPasswordMatch = await argon2.verify(
+      userOrCustomer.password,
+      password
+    );
     if (!isPasswordMatch) {
-      return res.status(400).json({ msg: "Password Salah" });
+      return res.status(400).json({ msg: "Username atau Password Salah" });
     }
 
     // Determine if the user or customer and create payload
@@ -39,7 +42,7 @@ export const Login = async (req, res) => {
           id_user: userOrCustomer.id_user,
           username: userOrCustomer.username,
           id_level: userOrCustomer.id_level,
-          role: 'admin'
+          role: "admin",
         }
       : {
           id_pelanggan: userOrCustomer.id_pelanggan,
@@ -48,7 +51,7 @@ export const Login = async (req, res) => {
           nama_pelanggan: userOrCustomer.nama_pelanggan,
           alamat: userOrCustomer.alamat,
           id_tarif: userOrCustomer.id_tarif,
-          role: 'pelanggan'
+          role: "pelanggan",
         };
 
     // Generate JWT token

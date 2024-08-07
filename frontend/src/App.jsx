@@ -5,6 +5,7 @@ import Layout from './components/layout';
 import Penggunaan from './pages/penggunaan';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import SignUp from './components/signup';
 
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Login />} />
+          <Route path="/signup" element={<SignUp/>} />
           <Route path="/layout" element={<Layout/>} />
           <Route path="/penggunaan" element={<Penggunaan/>} />
         </Routes>

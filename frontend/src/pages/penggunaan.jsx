@@ -1,30 +1,33 @@
-import React, {useEffect}from 'react';
+import React, { useEffect } from 'react';
 import Layout from './layout';
-import PenggunaanTable from '../components/listPenggunaan';
+import PenggunaanTable from '../components/penggunaan/listPenggunaan';
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchCurrentUser } from "../features/authSlice";
 
-
 const Penggunaan = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isError } = useSelector((state) => state.auth);
+  const { isError, isLoading } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    dispatch(fetchCurrentUser());
+    const getUserData = async () => {
+      await dispatch(fetchCurrentUser());
+    };
+
+    getUserData();
   }, [dispatch]);
 
   useEffect(() => {
-    if (isError) {
-      navigate("/admin");
+    if (!isLoading && isError) {
+      navigate("/");
     }
-  }, [isError, navigate]);
+  }, [isError, isLoading, navigate]);
 
   return (
     <div>
       <Layout>
-        <PenggunaanTable/>
+        <PenggunaanTable />
       </Layout>
     </div>
   );

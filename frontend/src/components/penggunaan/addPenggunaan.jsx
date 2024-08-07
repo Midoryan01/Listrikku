@@ -8,7 +8,7 @@ const AddPenggunaan = ({ isOpen, onClose }) => {
   const [meterAwal, setMeterAwal] = useState("");
   const [meterAkhir, setMeterAkhir] = useState("");
   const [pelanggan, setPelanggan] = useState([]);
-  const [successMessage, setSuccessMessage] = useState(""); // State for success message
+  const [successMessage, setSuccessMessage] = useState(""); 
 
   useEffect(() => {
     const fetchPelanggan = async () => {

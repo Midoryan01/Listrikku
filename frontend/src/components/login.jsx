@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { login, reset } from "../features/authSlice";
 
-
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -15,10 +14,10 @@ const Login = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      navigate("/");
-      dispatch(reset());
+      navigate("/penggunaan");
+      dispatch(reset()); 
     }
-  }, [user, isSuccess, dispatch, navigate]);
+  }, [isSuccess, navigate, dispatch]);
 
   const Auth = (e) => {
     e.preventDefault();
@@ -33,7 +32,9 @@ const Login = () => {
             <form onSubmit={Auth}>
               {isError && <p className="error-message">{message}</p>}
               <div className="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
-                <p className="lead fw-normal mb-0 me-3">Login to Your Account</p>
+                <p className="lead fw-normal mb-0 me-3">
+                  Login to Your Account
+                </p>
               </div>
               <h1
                 style={{
@@ -98,9 +99,6 @@ const Login = () => {
               </div>
             </form>
           </div>
-          {/* <div className="col-md-9 col-lg-6 col-xl-5">
-            <img src="" className="img-fluid" alt="Login illustration" />
-          </div> */}
         </div>
       </div>
     </div>
