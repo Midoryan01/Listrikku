@@ -17,9 +17,9 @@ export const authenticate = (req, res, next) => {
 
     // Set role based on token payload
     if (req.user.id_user) {
-      req.userRole = 'user';
+      req.userRole = "admin";
     } else if (req.user.id_pelanggan) {
-      req.userRole = 'pelanggan';
+      req.userRole = "pelanggan";
     }
 
     next();
@@ -27,4 +27,3 @@ export const authenticate = (req, res, next) => {
     return res.status(401).json({ msg: "Token tidak valid" });
   }
 };
-
