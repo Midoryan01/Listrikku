@@ -7,6 +7,7 @@ import {
   updatePembayaran,
   tambahPembayaran,
 } from "../controllers/pembayaranController.js";
+import { processPembayaran } from '../controllers/prosesPembayaran.js';
 
 const router = express.Router();
 
@@ -16,4 +17,7 @@ router.post('/pembayaran', createPembayaran);
 router.patch('/pembayaran/:id', updatePembayaran);
 router.delete("/pembayaran/:id", deletePembayaran)
 router.post('/tambahpembayaran', tambahPembayaran);
+
+  router.put('/prosesPembayaran', processPembayaran)
+
 export default router;
