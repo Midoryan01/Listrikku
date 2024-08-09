@@ -9,17 +9,20 @@ export const login = createAsyncThunk(
   "auth/login",
   async ({ username, password }, { rejectWithValue }) => {
     try {
+      console.log("Sending login request...");
       const response = await axios.post(`${API_URL}/login`, {
         username,
         password,
       });
-      // Store the token in local storage
+      console.log("Login response:", response.data);
       localStorage.setItem("token", response.data.token);
       return response.data;
     } catch (error) {
       if (error.response && error.response.data) {
+        console.error("Login error response:", error.response.data);
         return rejectWithValue(error.response.data.msg);
       }
+      console.error("Network error:", error);
       return rejectWithValue("Network Error");
     }
   }
@@ -29,7 +32,7 @@ export const login = createAsyncThunk(
 export const fetchCurrentUser = createAsyncThunk(
   "auth/fetchCurrentUser",
   async (_, { getState, rejectWithValue }) => {
-    const { token } = getState().auth;
+    const token = getState().auth.token || localStorage.getItem("token"); // Cek token dari state atau localStorage
     if (!token) {
       return rejectWithValue("No token available");
     }
@@ -37,7 +40,7 @@ export const fetchCurrentUser = createAsyncThunk(
     try {
       const response = await axios.get(`${API_URL}/me`, {
         headers: {
-          Authorization: `Bearer ${token}`, // Ensure token is included in headers
+          Authorization: `Bearer ${token}`, // Pastikan token ada di header
         },
       });
       return response.data;
@@ -50,13 +53,18 @@ export const fetchCurrentUser = createAsyncThunk(
   }
 );
 
+
 // Async thunk for logout
 export const logOut = createAsyncThunk(
   "auth/logout",
   async (_, { rejectWithValue }) => {
     try {
-      localStorage.removeItem("token"); // Clear the token from local storage
-      const response = await axios.delete(`${API_URL}/logout`);
+      const response = await axios.delete(`${API_URL}/logout`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // Kirim token untuk logout
+        },
+      });
+      localStorage.removeItem("token"); // Hapus token setelah logout berhasil
       return response.data;
     } catch (error) {
       if (error.response && error.response.data) {
@@ -70,10 +78,13 @@ export const logOut = createAsyncThunk(
 // Initial state
 const initialState = {
   user: null,
-  token: localStorage.getItem("token"), // Retrieve token from local storage
+  token: localStorage.getItem("token"),  // Ambil token dari localStorage
   role: null,
   status: "idle",
-  error: null,
+  isError: false,
+  isSuccess: false,
+  isLoading: false,
+  message: null,
 };
 
 // Auth slice
@@ -86,24 +97,43 @@ const authSlice = createSlice({
       state.token = null;
       state.role = null;
       state.status = "idle";
-      state.error = null;
+      state.isError = false;
+      state.isSuccess = false;
+      state.isLoading = false;
+      state.message = null;
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(login.pending, (state) => {
         state.status = "loading";
-        state.error = null;
+        state.isLoading = true;
+        state.isError = false;
+        state.message = null;
       })
       .addCase(login.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.user = action.payload;
+        state.user = {
+          id: action.payload.id_pelanggan || action.payload.id_user,
+          username: action.payload.username,
+          nama_pelanggan: action.payload.nama_pelanggan || null,
+          alamat: action.payload.alamat || null,
+          nomor_kwh: action.payload.nomor_kwh || null,
+          id_tarif: action.payload.id_tarif || null,
+        };
         state.token = action.payload.token;
-        state.role = action.payload.role;
+        // Menetapkan role berdasarkan id_level atau data lain
+        state.role = action.payload.id_level === 1 ? "admin" : "pelanggan";
+        state.isSuccess = true;
+        state.isLoading = false;
+        state.isError = false;
+        localStorage.setItem("token", action.payload.token);
       })
       .addCase(login.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.payload;
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
       })
       .addCase(fetchCurrentUser.pending, (state) => {
         state.status = "loading";
@@ -111,10 +141,15 @@ const authSlice = createSlice({
       .addCase(fetchCurrentUser.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.user = action.payload;
+        // Menetapkan role berdasarkan id_level atau data lain
+        state.role = action.payload.id_level === 1 ? "admin" : "pelanggan";
+        state.isError = false;
+        state.message = null;
       })
       .addCase(fetchCurrentUser.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.payload;
+        state.isError = true;
+        state.message = action.payload;
       })
       .addCase(logOut.fulfilled, (state) => {
         state.user = null;
@@ -124,6 +159,7 @@ const authSlice = createSlice({
       });
   },
 });
+
 
 // Export the reset action
 export const { reset } = authSlice.actions;
