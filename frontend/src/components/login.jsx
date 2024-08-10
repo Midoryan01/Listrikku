@@ -8,14 +8,14 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user, isError, isSuccess, isLoading, message } = useSelector(
+  const { isError, isSuccess, isLoading, message } = useSelector(
     (state) => state.auth
   );
 
   useEffect(() => {
     if (isSuccess) {
-      navigate("/penggunaan");
-      dispatch(reset()); 
+      navigate("/penggunaan"); // Adjust this route as needed
+      dispatch(reset());
     }
   }, [isSuccess, navigate, dispatch]);
 
@@ -30,11 +30,9 @@ const Login = () => {
         <div className="row d-flex justify-content-center align-items-center h-100">
           <div className="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
             <form onSubmit={Auth}>
-              {isError && <p className="error-message">{message}</p>}
+              {isError && <p className="error-message text-danger">{message}</p>}
               <div className="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
-                <p className="lead fw-normal mb-0 me-3">
-                  Login to Your Account
-                </p>
+                <p className="lead fw-normal mb-0 me-3">Login to Your Account</p>
               </div>
               <h1
                 style={{
@@ -49,6 +47,7 @@ const Login = () => {
                 </label>
                 <input
                   type="text"
+                  id="username"
                   className="form-control form-control-lg"
                   placeholder="Enter your Username"
                   value={username}
@@ -61,6 +60,7 @@ const Login = () => {
                 </label>
                 <input
                   type="password"
+                  id="password"
                   className="form-control form-control-lg"
                   placeholder="Enter your Password"
                   value={password}
@@ -78,9 +78,7 @@ const Login = () => {
                     Remember me
                   </label>
                 </div>
-                <a href="#" className="text-body">
-                  Forgot password?
-                </a>
+                <a href="#" className="text-body">Forgot password?</a>
               </div>
               <div className="text-center text-lg-start mt-4 pt-2">
                 <button
@@ -92,9 +90,7 @@ const Login = () => {
                 </button>
                 <p className="small fw-bold mt-2 pt-1 mb-0">
                   Don't have an account?{" "}
-                  <a href="/signup" className="link-danger">
-                    Sign Up
-                  </a>
+                  <a href="/signup" className="link-danger">Sign Up</a>
                 </p>
               </div>
             </form>

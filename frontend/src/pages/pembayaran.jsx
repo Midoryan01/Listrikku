@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import Layout from "./layout";
-import PenggunaanTable from "../components/penggunaan/listPenggunaan";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchCurrentUser } from "../features/authSlice";
+import ListPembayaran from "../components/pembayaran/listPembayaran";
 
-const Penggunaan = () => {
+const Pembayaran = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isError, isLoading } = useSelector((state) => state.auth);
@@ -27,10 +27,10 @@ const Penggunaan = () => {
   return (
     <div>
       <Layout>
-        <PenggunaanTable />
+        <ListPembayaran />
       </Layout>
     </div>
   );
 };
 
-export default Penggunaan;
+export default Pembayaran;

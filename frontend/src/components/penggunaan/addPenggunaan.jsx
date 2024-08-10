@@ -8,7 +8,7 @@ const AddPenggunaan = ({ isOpen, onClose }) => {
   const [meterAwal, setMeterAwal] = useState("");
   const [meterAkhir, setMeterAkhir] = useState("");
   const [pelanggan, setPelanggan] = useState([]);
-  const [successMessage, setSuccessMessage] = useState(""); 
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
     const fetchPelanggan = async () => {
@@ -46,14 +46,12 @@ const AddPenggunaan = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="modal show d-block" tabIndex="-1">
+    <div className="modal fade show" tabIndex="-1" style={{ display: 'block' }} aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title">Tambah Data Penggunaan</h5>
-            <button type="button" className="close" onClick={onClose}>
-              <span>&times;</span>
-            </button>
+            <h5 className="modal-title" id="exampleModalLabel">Tambah Data Penggunaan</h5>
+            <button type="button" className="btn-close" onClick={onClose} aria-label="Close"></button>
           </div>
           <div className="modal-body">
             {successMessage && <div className="alert alert-success">{successMessage}</div>}
